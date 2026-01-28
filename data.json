@@ -1,0 +1,160 @@
+{
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Marie Horwitz",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp",
+      "lastMessage": "Hello, are you there?",
+      "time": "Just now",
+      "unread": 3,
+      "online": true,
+      "messages": [
+        {
+          "fromMe": false,
+          "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          "time": "12:00 PM | Aug 13"
+        },
+        {
+          "fromMe": true,
+          "text": "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+          "time": "12:01 PM | Aug 13"
+        },
+        {
+          "fromMe": false,
+          "text": "Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+          "time": "12:02 PM | Aug 13"
+        }
+      ]
+    },
+
+    {
+      "id": 2,
+      "name": "John Doe",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp",
+      "lastMessage": "Let's meet tomorrow",
+      "time": "2 min ago",
+      "unread": 1,
+      "online": false,
+      "messages": [
+        {
+          "fromMe": false,
+          "text": "Hey John, are we still on for tomorrow?",
+          "time": "10:00 AM | Aug 12"
+        },
+        {
+          "fromMe": true,
+          "text": "Yes, absolutely!",
+          "time": "10:05 AM | Aug 12"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Emily Johnson",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp",
+      "lastMessage": "Did you finish the report?",
+      "time": "5 min ago",
+      "unread": 2,
+      "online": true,
+      "messages": [
+        {
+          "fromMe": false,
+          "text": "Hey, just checking in about the report.",
+          "time": "09:15 AM | Aug 14"
+        },
+        {
+          "fromMe": true,
+          "text": "Almost done, I’ll send it soon.",
+          "time": "09:17 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Perfect, thank you!",
+          "time": "09:18 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Hey, just checking in about the report.",
+          "time": "09:15 AM | Aug 14"
+        },
+        {
+          "fromMe": true,
+          "text": "Almost done, I’ll send it soon.",
+          "time": "09:17 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Perfect, thank you!",
+          "time": "09:18 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Hey, just checking in about the report.",
+          "time": "09:15 AM | Aug 14"
+        },
+        {
+          "fromMe": true,
+          "text": "Almost done, I’ll send it soon.",
+          "time": "09:17 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Perfect, thank you!",
+          "time": "09:18 AM | Aug 14"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Lucas Bennett",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp",
+      "lastMessage": "Call me when you're free",
+      "time": "20 min ago",
+      "unread": 0,
+      "online": false,
+      "messages": [
+        {
+          "fromMe": true,
+          "text": "I’ll be busy for a bit, but I’ll call later.",
+          "time": "08:40 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "No rush, just wanted to talk.",
+          "time": "08:42 AM | Aug 14"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Sofia Ramirez",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp",
+      "lastMessage": "See you soon!",
+      "time": "1 hour ago",
+      "unread": 4,
+      "online": true,
+      "messages": [
+        {
+          "fromMe": false,
+          "text": "Are we still meeting later today?",
+          "time": "07:30 AM | Aug 14"
+        },
+        {
+          "fromMe": true,
+          "text": "Yes, I’ll be there at 3 PM.",
+          "time": "07:32 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Great! Looking forward to it.",
+          "time": "07:33 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "See you soon!",
+          "time": "07:34 AM | Aug 14"
+        }
+      ]
+    }
+  ]
+}

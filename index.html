@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container py-5">
+      <div class="card" id="chat3">
+        <div class="card-body">
+          <div class="row">
+            <!-- aici incep conversatiile-->
+            <div
+              class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 d-flex flex-column"
+              style="height: 100%"
+            >
+              <div class="p-3 d-flex flex-column h-100">
+                <!-- search bar -->
+                <div class="input-group rounded mb-3">
+                  <input
+                    type="search"
+                    class="form-control rounded-start bg-body-tertiary"
+                    placeholder="Search"
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                  />
+                  <span
+                    class="input-group-text border-0 rounded-end"
+                    id="search-addon"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+                      />
+                    </svg>
+                  </span>
+                </div>
+
+                <!-- lista contacte -->
+                <div class="flex-grow-1 overflow-auto">
+                  <ul id="contact-list" class="list-unstyled mb-0"></ul>
+                </div>
+              </div>
+            </div>
+            <!-- aici incep mesajele-->
+            <div class="col-md-6 col-lg-7 col-xl-8 d-flex flex-column h-100">
+              <div id="chat-panel" class="d-none d-flex flex-column h-100">
+                <!-- chat header -->
+                <div
+                  id="chat-header"
+                  class="border-bottom p-3 d-flex align-items-center gap-3"
+                >
+                  <img
+                    id="chat-header-avatar"
+                    class="rounded-circle"
+                    width="45"
+                  />
+                  <h5 id="chat-header-name" class="mb-0 fw-bold"></h5>
+                </div>
+                <!-- chat messages -->
+                <div
+                  id="chat-container"
+                  class="flex-grow-1 overflow-auto p-3"
+                ></div>
+                <div class="border-top d-flex align-items-center p-3">
+                  <img
+                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                    alt="avatar 3"
+                    class="rounded-circle me-2"
+                    style="width: 45px; height: 100%"
+                  />
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    placeholder="Type message"
+                  />
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="dropdown">
+                      <button
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        class="btn btn-primary border"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-emoji-smile-fill"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.5 3.5 0 0 0 8 11.5a3.5 3.5 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="dropdown-menu p-2"
+                        style="
+                          width: 200px;
+                          max-height: 200px;
+                          overflow-y: auto;
+                        "
+                      >
+                        <div class="d-flex flex-wrap">
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😀</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😁</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😂</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >🤣</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😊</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😍</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😎</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😢</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >😡</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >👍</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >🙏</span
+                          >
+                          <span class="emoji p-2" style="cursor: pointer"
+                            >🔥</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+
+                    <button class="btn btn-primary">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-send-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="index.js"></script>
+  </body>
+</html>
