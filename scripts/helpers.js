@@ -13,7 +13,19 @@ export function getMessagePreview(text, limit = 30) {
 
 export function formatTimeNow() {
   const now = new Date();
-  return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  const time = now.toLocaleString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const date = now.toLocaleString("en-US", {
+    month: "short",
+    day: "2-digit",
+  });
+
+  return `${time} | ${date}`;
 }
 
 /// returneaza contactul caruia vrem sa trimitem mesajul
