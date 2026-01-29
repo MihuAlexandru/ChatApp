@@ -73,6 +73,7 @@ function loadChatForContact(contact) {
       row.classList.add("justify-content-end");
       row.appendChild(avatar);
       bubble.classList.add("text-white", "bg-primary");
+
       container.classList.add("text-end", "me-3");
     } else {
       row.classList.add("justify-content-start");
