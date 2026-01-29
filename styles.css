@@ -39,3 +39,26 @@ body {
 a {
   text-decoration: none !important;
 }
+
+/* ///////////////////////////////// */
+
+#chatbar {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  z-index: 9999;
+}
+
+/* Nice rounded look */
+.chat-window {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Optional: minimized state */
+.chat-window.minimized .card-body {
+  display: none;
+}
