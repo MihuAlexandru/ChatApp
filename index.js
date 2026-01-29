@@ -200,63 +200,6 @@ function openConversation(contact) {
   if (input) input.focus();
 }
 
-/** ---------------- trimitere mesaj ---------------- */
-
-/// iei id-ul contactului curent si adaugi mesajul la conversatia cu el
-/// handler pentru event listener de trimitere mesaj
-
-function sendActiveMessage() {
-  const contact = getActiveContact();
-  if (!contact) return;
-
-  const input = document.getElementById("chat-input");
-  if (!input) return;
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  const msg = {
-    fromMe: true,
-    text,
-    time: formatTimeNow(),
-  };
-
-  contact.messages ??= [];
-  contact.messages.push(msg);
-
-  contact.lastMessage = text;
-  contact.time = msg.time;
-  contact.unread = 0;
-
-  appendMessageToChat(contact, msg);
-  updateContactRow(contact);
-
-  saveContactsToStorage(state.contacts);
-
-  input.value = "";
-  input.focus();
-}
-
-/// adaugam event listeners pentru cand dai click send sau enter
-
-function wireComposer() {
-  const input = document.getElementById("chat-input");
-  const sendBtn = document.getElementById("chat-send");
-
-  if (!input || !sendBtn) {
-    console.warn(
-      "Composer not found (#chat-input / #chat-send). Add IDs in HTML for best results.",
-    );
-    return;
-  }
-
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") sendActiveMessage();
-  });
-
-  sendBtn.addEventListener("click", sendActiveMessage);
-}
-
 /// dupa ce am facut toate load-urile
 /// afisam lista cu toate contactele
 
@@ -299,6 +242,281 @@ Promise.all([loadTemplate(), loadChatTemplate(), loadData()]).then(
       state.contactRowEls.set(c.id, rowEl);
     });
 
-    wireComposer();
+    // 1) Create WS connection (pick one)
+    // const connection = new ServerConnection("wss://ws.ifelse.io"); // echoes back what you send [1](https://www.baeldung.com/linux/shell-read-websocket-response)
+    const connection = new ServerConnection("wss://ws.ifelse.io"); // Postman echo [2](https://blog.postman.com/introducing-postman-websocket-echo-service/)
+    connection.connect();
+
+    // 2) Create chat window controller
+    const chatWindow = new ChatWindow({ state });
+
+    window.sendAsThem = (contactId, text) => {
+      connection.send({
+        type: "chat-message",
+        contactId,
+        text,
+        time: formatTimeNow(),
+        sender: "them",
+        clientMsgId: crypto?.randomUUID?.() ?? String(Date.now()),
+      });
+    };
+
+    // 3) PubSub wiring: UI -> WS
+    chatWindow.subscribe("send", (envelope) => {
+      // This prints when you send
+      console.log("[APP] sending to websocket:", envelope);
+      connection.send(envelope);
+    });
+
+    // 4) PubSub wiring: WS -> UI
+    connection.subscribe("message", (payload) => {
+      // This prints when you receive
+      console.log("[APP] received from websocket:", payload);
+      chatWindow.receive(payload); // optional UI rendering (currently logs only)
+    });
   },
 );
+
+class PubSub {
+  #subscriptions = new Map();
+
+  subscribe(name, fn) {
+    const arr = this.#subscriptions.get(name) ?? [];
+    arr.push(fn);
+    this.#subscriptions.set(name, arr);
+
+    return () => {
+      const next = (this.#subscriptions.get(name) ?? []).filter(
+        (x) => x !== fn,
+      );
+      this.#subscriptions.set(name, next);
+    };
+  }
+
+  publish(name, data) {
+    (this.#subscriptions.get(name) ?? []).forEach((fn) => fn(data));
+  }
+}
+
+class ServerConnection extends PubSub {
+  #socket = null;
+  #url = null;
+  #queue = [];
+
+  constructor(url) {
+    super();
+    this.#url = url;
+  }
+
+  connect() {
+    this.#socket = new WebSocket(this.#url);
+
+    this.#socket.addEventListener("open", (ev) => {
+      console.log("[WS] open", this.#url, ev);
+      this.publish("open", ev);
+
+      while (this.#queue.length) {
+        this.#socket.send(this.#queue.shift());
+      }
+    });
+
+    this.#socket.addEventListener("close", (ev) => {
+      console.log("[WS] close", ev.code, ev.reason);
+      this.publish("close", ev);
+    });
+
+    this.#socket.addEventListener("error", (ev) => {
+      console.log("[WS] error", ev);
+      this.publish("error", ev);
+    });
+
+    this.#socket.addEventListener("message", (ev) => {
+      let payload = ev.data;
+      try {
+        payload = JSON.parse(ev.data);
+      } catch {
+        // keep as text if not JSON
+      }
+
+      console.log("[WS] recv", payload);
+      this.publish("message", payload);
+    });
+  }
+
+  send(message) {
+    const data =
+      typeof message === "string" ? message : JSON.stringify(message);
+
+    console.log("[WS] send", message);
+
+    // If not open yet, queue it
+    if (!this.#socket || this.#socket.readyState !== WebSocket.OPEN) {
+      this.#queue.push(data);
+      return;
+    }
+
+    this.#socket.send(data);
+  }
+}
+
+/**
+ * ChatWindow = controller for your existing single chat panel.
+ * It uses your existing state + helper functions (no UI rewrite).
+ */ class ChatWindow extends PubSub {
+  constructor({
+    state,
+    sendBtnId = "chat-send",
+    inputId = "chat-input",
+    // When using an echo server, you'll often get your own sent message back.
+    // If you already rendered it locally (you do), ignoring "me" prevents duplicates.
+    ignoreOwnEcho = true,
+  }) {
+    super();
+    this.state = state;
+    this.ignoreOwnEcho = ignoreOwnEcho;
+
+    // Optional: dedupe by clientMsgId (useful when you later have a real server)
+    this.seenIds = new Set();
+
+    this.input = document.getElementById(inputId);
+    this.sendBtn = document.getElementById(sendBtnId);
+
+    if (!this.input || !this.sendBtn) {
+      console.warn("ChatWindow: composer elements not found");
+      return;
+    }
+
+    // Wire UI events once
+    this.input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") this.#handleSend();
+    });
+
+    this.sendBtn.addEventListener("click", () => this.#handleSend());
+  }
+
+  /**
+   * UI -> publish("send") and also update local UI immediately.
+   * This matches your existing behavior: the sender sees their message instantly.
+   */
+  #handleSend() {
+    const contact = getActiveContact();
+    if (!contact) return;
+
+    const text = this.input.value.trim();
+    if (!text) return;
+
+    const time = formatTimeNow();
+
+    // 1) Update UI/state immediately as "me"
+    this.#applyMessageToState({
+      contactId: contact.id,
+      text,
+      time,
+      fromMe: true,
+    });
+
+    // 2) Publish envelope for WebSocket sending
+    const envelope = {
+      type: "chat-message",
+      contactId: contact.id,
+      text,
+      time,
+      sender: "me",
+      clientMsgId: crypto?.randomUUID?.() ?? String(Date.now()),
+    };
+
+    this.publish("send", envelope);
+
+    // reset input
+    this.input.value = "";
+    this.input.focus();
+  }
+
+  /**
+   * WebSocket -> UI.
+   * Accepts:
+   *  - object envelope: { type:"chat-message", contactId, text, time, sender, clientMsgId }
+   *  - raw string: will be treated as incoming to active conversation
+   */
+  receive(payload) {
+    // 1) Raw string (some servers echo plain text)
+    if (typeof payload === "string") {
+      const active = getActiveContact();
+      if (!active) return;
+
+      this.#applyMessageToState({
+        contactId: active.id,
+        text: payload,
+        time: formatTimeNow(),
+        fromMe: false,
+      });
+      return;
+    }
+
+    // 2) Must be an object
+    if (!payload || typeof payload !== "object") return;
+
+    // 3) Only handle our message type
+    if (payload.type !== "chat-message") {
+      // ignore unknown protocol messages
+      return;
+    }
+
+    const { contactId, text, time, sender, clientMsgId } = payload;
+    if (!contactId || !text) return;
+
+    // 4) Optional dedupe by clientMsgId
+    if (clientMsgId) {
+      if (this.seenIds.has(clientMsgId)) return;
+      this.seenIds.add(clientMsgId);
+    }
+
+    // 5) If this is an echo server and sender is "me",
+    // ignore to avoid duplicating the message (we already rendered it locally).
+    if (this.ignoreOwnEcho && sender === "me") {
+      return;
+    }
+
+    const fromMe = sender === "me"; // sender "them" -> false
+
+    this.#applyMessageToState({
+      contactId,
+      text,
+      time: time ?? formatTimeNow(),
+      fromMe,
+    });
+  }
+
+  /**
+   * Single source of truth for:
+   * - pushing message into state
+   * - updating contact list row (last message/time/unread)
+   * - rendering into chat if active
+   * - saving to localStorage
+   */
+  #applyMessageToState({ contactId, text, time, fromMe }) {
+    const contact = this.state.contacts.find((c) => c.id === contactId);
+    if (!contact) return;
+
+    const msg = { fromMe, text, time };
+
+    contact.messages ??= [];
+    contact.messages.push(msg);
+
+    contact.lastMessage = text;
+    contact.time = time;
+
+    if (this.state.activeContactId === contactId) {
+      appendMessageToChat(contact, msg);
+      contact.unread = 0;
+    } else {
+      // Only increase unread for incoming messages
+      if (!fromMe) {
+        contact.unread = (contact.unread ?? 0) + 1;
+      }
+    }
+
+    updateContactRow(contact);
+    saveContactsToStorage(this.state.contacts);
+  }
+}
