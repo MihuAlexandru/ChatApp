@@ -60,6 +60,7 @@ export class ChatWindow extends PubSub {
 
     const time = formatTimeNow();
 
+    // Update UI immediately
     this.#applyMessageToState({
       contactId: contact.id,
       text,
@@ -69,10 +70,10 @@ export class ChatWindow extends PubSub {
 
     const envelope = {
       type: "chat-message",
-      contactId: contact.id,
+      fromUserId: this.state.myUserId, // ✅ who am I
+      toUserId: contact.id, // ✅ who I'm sending to
       text,
       time,
-      sender: "me",
       clientMsgId: crypto?.randomUUID?.() ?? String(Date.now()),
     };
 
@@ -84,40 +85,36 @@ export class ChatWindow extends PubSub {
 
   /// rezolva mesajele PRIMITE de la websocket
   receive(payload) {
-    /// daca serverul trimite un string atunci presupune
-    // ca mesajul e pentru conversatia curenta
-    // pentru ca nu are nicaieri specificat un ID
-    if (typeof payload === "string") {
-      const active = getActiveContact();
-      if (!active) return;
-      this.#applyMessageToState({
-        contactId: active.id,
-        text: payload,
-        time: formatTimeNow(),
-        fromMe: false,
-      });
-      return;
-    }
-    /// serverul da reject la orice nu respecta formatul acelui envelope
     if (!payload || typeof payload !== "object") return;
     if (payload.type !== "chat-message") return;
 
-    const { contactId, text, time, sender, clientMsgId } = payload;
-    if (!contactId || !text) return;
+    const { fromUserId, toUserId, text, time, clientMsgId } = payload;
+    if (!fromUserId || !toUserId || !text) return;
 
-    ///previne duplicarea mesajelor daca serverul a trimis de mai multe ori
+    // Deduplicate (optional but good)
     if (clientMsgId) {
       if (this.seenIds.has(clientMsgId)) return;
       this.seenIds.add(clientMsgId);
     }
 
-    ///posibilitate de ignore you're own echo
-    if (this.ignoreOwnEcho && sender === "me") return;
+    const myId = this.state.myUserId;
 
-    const fromMe = sender === "me";
+    // Only accept messages that involve me
+    const involvesMe = toUserId === myId || fromUserId === myId;
+    if (!involvesMe) return;
+
+    // Figure out which contact thread to update:
+    // - if it's from someone else to me => thread is fromUserId
+    // - if it's from me to someone else => thread is toUserId
+    const threadContactId = fromUserId === myId ? toUserId : fromUserId;
+
+    const fromMe = fromUserId === myId;
+
+    // Optional: ignore echo of my own message if server echoes back
+    if (this.ignoreOwnEcho && fromMe) return;
 
     this.#applyMessageToState({
-      contactId,
+      contactId: threadContactId,
       text,
       time: time ?? formatTimeNow(),
       fromMe,

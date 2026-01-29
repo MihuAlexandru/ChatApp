@@ -16,13 +16,42 @@ import { wireEmojiPicker } from "./ui/emojiPicker.js";
 /// pentru cand trimitem si primim mesaje
 /// also functie helper sendAsThem
 
+function getOrCreateSelfId() {
+  const key = "chat:selfId";
+  let id = sessionStorage.getItem(key); // ✅ per-tab
+  if (!id) {
+    id = crypto?.randomUUID?.() ?? String(Date.now());
+    sessionStorage.setItem(key, id);
+  }
+  return id;
+}
+
+function getUserIdFromUrlOrSession() {
+  const params = new URLSearchParams(location.search);
+  const fromUrl = Number(params.get("userId"));
+
+  const key = "chat:userId";
+  const fromSession = Number(sessionStorage.getItem(key));
+
+  const id =
+    Number.isFinite(fromUrl) && fromUrl > 0
+      ? fromUrl
+      : Number.isFinite(fromSession) && fromSession > 0
+        ? fromSession
+        : 1;
+
+  sessionStorage.setItem(key, String(id));
+  return id;
+}
+
 async function main() {
   const [_, __, contacts] = await Promise.all([
     loadTemplate(),
     loadChatTemplate(),
     loadData(),
   ]);
-
+  state.myUserId = getUserIdFromUrlOrSession();
+  state.selfId = getOrCreateSelfId();
   contacts.forEach((c, idx) => (c.id ??= idx + 1));
   state.contacts = contacts;
 
@@ -30,6 +59,11 @@ async function main() {
 
   const connection = new ServerConnection(WS_URL);
   connection.connect();
+
+  connection.subscribe("open", () => {
+    connection.send({ type: "hello", userId: state.myUserId });
+  });
+  ``;
 
   const chatWindow = new ChatWindow({ state });
 
