@@ -3,10 +3,10 @@ import { WS_URL } from "./config.js";
 import { loadTemplate, loadChatTemplate } from "./templates.js";
 import { loadData } from "./data.js";
 import { renderContactsList } from "./ui/contactsRender.js";
-
 import { ServerConnection } from "./core/ServerConnection.js";
 import { ChatWindow } from "./core/ChatWindow.js";
 import { formatTimeNow } from "./helpers.js";
+import { wireEmojiPicker } from "./ui/emojiPicker.js";
 
 /// dupa ce am facut toate load-urile
 /// afisam lista cu toate contactele
@@ -33,19 +33,20 @@ async function main() {
 
   const chatWindow = new ChatWindow({ state });
 
-  // UI -> WS
+  wireEmojiPicker();
+
+  /// UI -> WS
   chatWindow.subscribe("send", (envelope) => {
     console.log("[APP] sending to websocket:", envelope);
     connection.send(envelope);
   });
 
-  // WS -> UI
+  /// WS -> UI
   connection.subscribe("message", (payload) => {
     console.log("[APP] received from websocket:", payload);
     chatWindow.receive(payload);
   });
 
-  // dev helper
   window.sendAsThem = (contactId, text) => {
     connection.send({
       type: "chat-message",
