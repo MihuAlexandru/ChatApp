@@ -1,5 +1,7 @@
 import { myAvatar } from "../config.js";
 
+// ne afiseaza toate mesajele pentru chat-ul curent
+
 export function renderChat(contact) {
   const chatContainer = document.getElementById("chat-container");
   chatContainer.innerHTML = "";
@@ -12,12 +14,18 @@ export function renderChat(contact) {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
+// adaugare mesaj nou trimis in UI
+
 export function appendMessageToChat(contact, msg) {
   const chatContainer = document.getElementById("chat-container");
   const node = buildMessageNode(contact, msg);
   chatContainer.appendChild(node);
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+
+// construirea efectiva a unui mesaj in conversatie
+// in functie de cine trimite se schimba poza si stilul
+// bulei de mesaj
 
 export function buildMessageNode(contact, msg) {
   const chatTemplate = document.getElementById("chat-message-template");
@@ -27,6 +35,9 @@ export function buildMessageNode(contact, msg) {
     );
   }
 
+  // aici facem cloneNode(true) ca sa facem clonare deep a intregului subtree
+  // si in general folosim fragmente pentru ca ne lasa sa construim DOM-ul
+  // off screen si sa dam insert doar o singura data
   const fragment = chatTemplate.content.cloneNode(true);
 
   const row = fragment.querySelector(".chat-row");

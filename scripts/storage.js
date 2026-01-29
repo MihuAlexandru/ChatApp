@@ -1,3 +1,6 @@
+/** ---------------- Local storage aici ---------------- */
+/// load si save
+
 import { STORAGE_KEY } from "./config.js";
 
 export function loadContactsFromStorage() {

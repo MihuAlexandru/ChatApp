@@ -1,3 +1,7 @@
+/** ---------------- templaturi aici ---------------- */
+
+/// load la cele 2 template-uri
+
 export async function loadTemplate() {
   const response = await fetch("templates/contact-template.tpl");
   const html = await response.text();

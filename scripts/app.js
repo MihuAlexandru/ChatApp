@@ -8,6 +8,14 @@ import { ServerConnection } from "./core/ServerConnection.js";
 import { ChatWindow } from "./core/ChatWindow.js";
 import { formatTimeNow } from "./helpers.js";
 
+/// dupa ce am facut toate load-urile
+/// afisam lista cu toate contactele
+/// creeam conexiunea
+/// instantiem chatwindow cu state-ul curent
+/// facem subscribe la send si message
+/// pentru cand trimitem si primim mesaje
+/// also functie helper sendAsThem
+
 async function main() {
   const [_, __, contacts] = await Promise.all([
     loadTemplate(),

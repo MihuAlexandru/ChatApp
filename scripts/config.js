@@ -3,4 +3,4 @@ export const myAvatar =
 
 export const STORAGE_KEY = "chat-app-contacts-v1";
 
-export const WS_URL = "wss://ws.ifelse.io"; // echo server
+export const WS_URL = "wss://ws.ifelse.io";

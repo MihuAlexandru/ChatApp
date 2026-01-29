@@ -2,6 +2,10 @@ import { state } from "../state.js";
 import { getMessagePreview } from "../helpers.js";
 import { renderChat } from "./chatRender.js";
 
+/// cand trimitem un mesaj in chat-ul curent
+/// se face update la last message si contact time
+/// cand intram pe conversatie dispare si badge-ul
+
 export function updateContactRow(contact) {
   const rowEl = state.contactRowEls.get(contact.id);
   if (!rowEl) return;
@@ -18,6 +22,8 @@ export function updateContactRow(contact) {
   unreadBadge.style.display = unread === 0 ? "none" : "";
 }
 
+/// afisarea chat-ului cu o persoana
+
 export function showChatPanel(contact) {
   const panel = document.getElementById("chat-panel");
   const headerName = document.getElementById("chat-header-name");
@@ -28,6 +34,10 @@ export function showChatPanel(contact) {
 
   panel.classList.remove("d-none");
 }
+
+/// facem update in stanga in lista de contacte
+/// show si render chat
+/// focus the input
 
 export function openConversation(contact) {
   state.activeContactId = contact.id;
@@ -41,6 +51,8 @@ export function openConversation(contact) {
   const input = document.getElementById("chat-input");
   if (input) input.focus();
 }
+
+// randeaza lista de contacte la inceput de tot
 
 export function renderContactsList(contacts) {
   const template = document.getElementById("contact-template");

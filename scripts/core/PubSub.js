@@ -1,3 +1,9 @@
+/** ---------------- Clasa PubSub ---------------- */
+// tine un map cu event name si array de callbackuri asociate
+// subscribe ca sa inregistrezi callbackuri noi pe event
+// intoarce un unsubscribe function pe care il poti apela mai tarziu
+// publish e ca sa activezi un event, apeleaza toate callbackurile asociate
+
 export class PubSub {
   #subscriptions = new Map();
 
