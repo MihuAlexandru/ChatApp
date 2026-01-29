@@ -56,6 +56,13 @@ const state = {
 
 /** ---------------- niste helpere  ---------------- */
 
+/// trunchiere preview mesaj
+
+function getMessagePreview(text, limit = 30) {
+  if (!text) return "";
+  return text.length > limit ? text.substring(0, limit) + "..." : text;
+}
+
 /// formatare data trimiterii mesajului
 
 function formatTimeNow() {
@@ -163,8 +170,9 @@ function updateContactRow(contact) {
   const rowEl = state.contactRowEls.get(contact.id);
   if (!rowEl) return;
 
-  rowEl.querySelector(".contact-last-message").textContent =
-    contact.lastMessage ?? "";
+  rowEl.querySelector(".contact-last-message").textContent = getMessagePreview(
+    contact.lastMessage,
+  );
   rowEl.querySelector(".contact-time").textContent = contact.time ?? "";
 
   const unreadBadge = rowEl.querySelector(".contact-unread");
@@ -266,7 +274,10 @@ Promise.all([loadTemplate(), loadChatTemplate(), loadData()]).then(
 
       clone.querySelector(".avatar").src = c.avatar;
       clone.querySelector(".contact-name").textContent = c.name;
-      clone.querySelector(".contact-last-message").textContent = c.lastMessage;
+
+      clone.querySelector(".contact-last-message").textContent =
+        getMessagePreview(c.lastMessage);
+
       clone.querySelector(".contact-time").textContent = c.time;
 
       const unreadBadge = clone.querySelector(".contact-unread");
