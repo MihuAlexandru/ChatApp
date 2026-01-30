@@ -1,10 +1,24 @@
 import { state } from "../state.js";
 import { getMessagePreview } from "../helpers.js";
 import { renderChat } from "./chatRender.js";
+import { getMyAvatar } from "../config.js";
 
 /// cand trimitem un mesaj in chat-ul curent
 /// se face update la last message si contact time
 /// cand intram pe conversatie dispare si badge-ul
+
+export function moveContactRowToTop(contactId) {
+  const list = document.getElementById("contact-list");
+  if (!list) return;
+
+  const rowEl = state.contactRowEls.get(contactId);
+  if (!rowEl) return;
+
+  // If it's already first, do nothing
+  if (list.firstElementChild === rowEl) return;
+
+  list.prepend(rowEl);
+}
 
 export function updateContactRow(contact) {
   const rowEl = state.contactRowEls.get(contact.id);
@@ -30,7 +44,7 @@ export function showChatPanel(contact) {
   const headerAvatar = document.getElementById("chat-header-avatar");
 
   headerName.textContent = contact.name;
-  headerAvatar.src = contact.avatar;
+  headerAvatar.src = getMyAvatar(contact.id);
 
   panel.classList.remove("d-none");
 }
@@ -61,7 +75,7 @@ export function renderContactsList(contacts) {
   contacts.forEach((c) => {
     const clone = template.content.cloneNode(true);
 
-    clone.querySelector(".avatar").src = c.avatar;
+    clone.querySelector(".avatar").src = getMyAvatar(c.id);
     clone.querySelector(".contact-name").textContent = c.name;
 
     clone.querySelector(".contact-last-message").textContent =

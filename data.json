@@ -2,44 +2,62 @@
   "contacts": [
     {
       "id": 1,
-      "name": "Marie Horwitz",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp",
-
+      "name": "Diana",
       "online": true
     },
     {
       "id": 2,
-      "name": "John Doe",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp",
-
+      "name": "Laura",
       "online": false
     },
     {
       "id": 3,
-      "name": "Emily Johnson",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp",
-
+      "name": "George",
       "online": true
     },
     {
       "id": 4,
-      "name": "Lucas Bennett",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp",
-
+      "name": "Luca",
       "online": false
     },
     {
       "id": 5,
-      "name": "Sofia Ramirez",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp",
-
+      "name": "Sofia",
       "online": true
     },
     {
       "id": 6,
-      "name": "Honey",
-      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp",
-
+      "name": "Paul",
+      "online": true
+    },
+    {
+      "id": 7,
+      "name": "Diana",
+      "online": true
+    },
+    {
+      "id": 8,
+      "name": "Laura",
+      "online": false
+    },
+    {
+      "id": 9,
+      "name": "George",
+      "online": true
+    },
+    {
+      "id": 10,
+      "name": "Luca",
+      "online": false
+    },
+    {
+      "id": 11,
+      "name": "Sofia",
+      "online": true
+    },
+    {
+      "id": 12,
+      "name": "Paul",
       "online": true
     }
   ]

@@ -7,7 +7,7 @@ import {
   contactsToConversationsMap,
 } from "../storage.js";
 import { appendMessageToChat } from "../ui/chatRender.js";
-import { updateContactRow } from "../ui/contactsRender.js";
+import { updateContactRow, moveContactRowToTop } from "../ui/contactsRender.js";
 
 // clasa asta nu stie de websocket,
 // stie doar ca trebuie sa publice un event
@@ -73,8 +73,8 @@ export class ChatWindow extends PubSub {
 
     const envelope = {
       type: "chat-message",
-      fromUserId: this.state.myUserId, // ✅ who am I
-      toUserId: contact.id, // ✅ who I'm sending to
+      fromUserId: this.state.myUserId,
+      toUserId: contact.id,
       text,
       time,
       clientMsgId: crypto?.randomUUID?.() ?? String(Date.now()),
@@ -149,7 +149,9 @@ export class ChatWindow extends PubSub {
       if (!fromMe) contact.unread = (contact.unread ?? 0) + 1;
     }
     ///update the row pe partea stanga cu lista
+
     updateContactRow(contact);
+    moveContactRowToTop(contact.id);
 
     const convMap = contactsToConversationsMap(this.state.contacts);
     saveUserConversations(this.state.myUserId, convMap);
