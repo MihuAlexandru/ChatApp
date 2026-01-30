@@ -29,36 +29,6 @@
       "id": 6,
       "name": "Paul",
       "online": true
-    },
-    {
-      "id": 7,
-      "name": "Diana",
-      "online": true
-    },
-    {
-      "id": 8,
-      "name": "Laura",
-      "online": false
-    },
-    {
-      "id": 9,
-      "name": "George",
-      "online": true
-    },
-    {
-      "id": 10,
-      "name": "Luca",
-      "online": false
-    },
-    {
-      "id": 11,
-      "name": "Sofia",
-      "online": true
-    },
-    {
-      "id": 12,
-      "name": "Paul",
-      "online": true
     }
   ]
 }

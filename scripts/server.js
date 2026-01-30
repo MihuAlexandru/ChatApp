@@ -2,7 +2,6 @@ import { WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
 
-// userId -> Set<WebSocket>
 const users = new Map();
 
 function addSocket(userId, ws) {
@@ -38,7 +37,6 @@ wss.on("connection", (ws) => {
       return;
     }
 
-    // 1) First message: register
     if (payload.type === "hello") {
       const userId = Number(payload.userId);
       if (!Number.isFinite(userId) || userId <= 0) return;
@@ -50,13 +48,11 @@ wss.on("connection", (ws) => {
       return;
     }
 
-    // 2) Chat messages
     if (payload.type === "chat-message") {
       const { fromUserId, toUserId, text, time, clientMsgId } = payload;
 
       if (!fromUserId || !toUserId || !text) return;
 
-      // basic integrity check: sender must match registered socket user
       if (ws.userId !== fromUserId) return;
 
       const msg = {
@@ -68,11 +64,7 @@ wss.on("connection", (ws) => {
         clientMsgId,
       };
 
-      // Deliver to recipient only
       sendToUser(toUserId, msg);
-
-      // Optional: echo back to sender (usually not needed if UI already appends locally)
-      // sendToUser(fromUserId, msg);
 
       return;
     }

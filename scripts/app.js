@@ -69,7 +69,6 @@ async function main() {
   connection.subscribe("open", () => {
     connection.send({ type: "hello", userId: state.myUserId });
   });
-  ``;
 
   const chatWindow = new ChatWindow({ state });
 
