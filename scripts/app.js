@@ -44,13 +44,14 @@ function getUserIdFromUrlOrSession() {
   return id;
 }
 
+state.myUserId = getUserIdFromUrlOrSession();
+
 async function main() {
   const [_, __, contacts] = await Promise.all([
     loadTemplate(),
     loadChatTemplate(),
-    loadData(),
+    loadData(state.myUserId),
   ]);
-  state.myUserId = getUserIdFromUrlOrSession();
 
   state.myAvatar = getMyAvatar(state.myUserId);
   const composerAvatar = document.getElementById("chat-composer-avatar");
@@ -60,7 +61,7 @@ async function main() {
   contacts.forEach((c, idx) => (c.id ??= idx + 1));
   state.contacts = contacts;
 
-  renderContactsList(contacts);
+  renderContactsList(contacts.filter((c) => c.id !== state.myUserId));
 
   const connection = new ServerConnection(WS_URL);
   connection.connect();

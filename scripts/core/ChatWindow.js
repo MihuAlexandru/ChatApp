@@ -2,7 +2,10 @@
 
 import { PubSub } from "./PubSub.js";
 import { getActiveContact, formatTimeNow } from "../helpers.js";
-import { saveContactsToStorage } from "../storage.js";
+import {
+  saveUserConversations,
+  contactsToConversationsMap,
+} from "../storage.js";
 import { appendMessageToChat } from "../ui/chatRender.js";
 import { updateContactRow } from "../ui/contactsRender.js";
 
@@ -147,6 +150,8 @@ export class ChatWindow extends PubSub {
     }
     ///update the row pe partea stanga cu lista
     updateContactRow(contact);
-    saveContactsToStorage(this.state.contacts);
+
+    const convMap = contactsToConversationsMap(this.state.contacts);
+    saveUserConversations(this.state.myUserId, convMap);
   }
 }
