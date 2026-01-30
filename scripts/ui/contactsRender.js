@@ -57,8 +57,11 @@ export function openConversation(contact) {
 export function renderContactsList(contacts) {
   const template = document.getElementById("contact-template");
   const list = document.getElementById("contact-list");
+  const myUserId = state.myUserId;
 
   contacts.forEach((c) => {
+    if (c.id === myUserId) return;
+
     const clone = template.content.cloneNode(true);
 
     clone.querySelector(".avatar").src = c.avatar;

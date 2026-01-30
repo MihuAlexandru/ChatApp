@@ -1,6 +1,6 @@
-import { myAvatar } from "../config.js";
-
 // ne afiseaza toate mesajele pentru chat-ul curent
+
+import { state } from "../state.js";
 
 export function renderChat(contact) {
   const chatContainer = document.getElementById("chat-container");
@@ -46,7 +46,7 @@ export function buildMessageNode(contact, msg) {
   const time = fragment.querySelector(".chat-time");
   const container = fragment.querySelector(".chat-bubble-container");
 
-  avatar.src = msg.fromMe ? myAvatar : contact.avatar;
+  avatar.src = msg.fromMe ? state.myAvatar : contact.avatar;
   bubble.textContent = msg.text;
   time.textContent = msg.time;
 

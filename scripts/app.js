@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { WS_URL } from "./config.js";
+import { WS_URL, getMyAvatar } from "./config.js";
 import { loadTemplate, loadChatTemplate } from "./templates.js";
 import { loadData } from "./data.js";
 import { renderContactsList } from "./ui/contactsRender.js";
@@ -18,7 +18,7 @@ import { wireEmojiPicker } from "./ui/emojiPicker.js";
 
 function getOrCreateSelfId() {
   const key = "chat:selfId";
-  let id = sessionStorage.getItem(key); // ✅ per-tab
+  let id = sessionStorage.getItem(key);
   if (!id) {
     id = crypto?.randomUUID?.() ?? String(Date.now());
     sessionStorage.setItem(key, id);
@@ -51,6 +51,11 @@ async function main() {
     loadData(),
   ]);
   state.myUserId = getUserIdFromUrlOrSession();
+
+  state.myAvatar = getMyAvatar(state.myUserId);
+  const composerAvatar = document.getElementById("chat-composer-avatar");
+  if (composerAvatar) composerAvatar.src = state.myAvatar;
+
   state.selfId = getOrCreateSelfId();
   contacts.forEach((c, idx) => (c.id ??= idx + 1));
   state.contacts = contacts;

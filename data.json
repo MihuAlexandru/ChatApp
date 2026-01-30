@@ -26,7 +26,6 @@
         }
       ]
     },
-
     {
       "id": 2,
       "name": "John Doe",
@@ -129,6 +128,37 @@
       "id": 5,
       "name": "Sofia Ramirez",
       "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp",
+      "lastMessage": "See you soon!",
+      "time": "1 hour ago",
+      "unread": 4,
+      "online": true,
+      "messages": [
+        {
+          "fromMe": false,
+          "text": "Are we still meeting later today?",
+          "time": "07:30 AM | Aug 14"
+        },
+        {
+          "fromMe": true,
+          "text": "Yes, I’ll be there at 3 PM.",
+          "time": "07:32 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "Great! Looking forward to it.",
+          "time": "07:33 AM | Aug 14"
+        },
+        {
+          "fromMe": false,
+          "text": "See you soon!",
+          "time": "07:34 AM | Aug 14"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Honey",
+      "avatar": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp",
       "lastMessage": "See you soon!",
       "time": "1 hour ago",
       "unread": 4,
